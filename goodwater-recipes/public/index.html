@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d3748">
+  <title>Goodwater Recipes - Gestion de recettes</title>
+  <link rel="stylesheet" href="/style.css?v=ciqual-estimator-2025">
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="apple-touch-icon" type="image/png" href="/logo.png">
+</head>
+<body>
+  <div id="app-splash" class="app-splash" role="status" aria-live="polite" aria-label="Chargement de Goodwater Recipes">
+    <div class="app-splash-logo-ring">
+      <img class="app-splash-logo" src="/api/logo" alt="Goodwater Recipes">
+    </div>
+    <span class="app-splash-label">Goodwater Recipes</span>
+  </div>
+  <div id="app">
+
+    <main id="shared-recipe-page" class="shared-recipe-page page hidden">
+      <header class="shared-recipe-brand">
+        <img src="/api/logo" alt="" class="shared-recipe-logo">
+        <span>Goodwater Recipes</span>
+      </header>
+      <article id="shared-recipe-content" class="shared-recipe-card" aria-live="polite"></article>
+    </main>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+      <div class="login-container">
+        <div class="app-icon">
+          <div class="login-logo">
+            <img id="login-logo-img" class="app-logo-img" alt="Logo">
+            <svg id="login-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="14" fill="oklch(0.55 0.18 30)"/>
+              <path d="M13 24l8 8 14-14" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <h1>Goodwater Recipes</h1>
+        <p class="login-subtitle">Cuisinez, organisez et partagez simplement.</p>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Nom d'utilisateur</label>
+            <input type="text" id="login-username" placeholder="Entrez votre nom d'utilisateur" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Mot de passe</label>
+            <div class="password-field">
+              <input type="password" id="login-password" placeholder="Entrez votre mot de passe" required autocomplete="current-password">
+              <button type="button" class="password-toggle" data-password-toggle="login-password" aria-label="Afficher le mot de passe" aria-pressed="false">
+                <span aria-hidden="true">Afficher</span>
+              </button>
+            </div>
+          </div>
+          <button type="submit" id="login-submit">Se connecter</button>
+          <div class="biometric-login-separator"><span>ou</span></div>
+          <button id="biometric-login-btn" class="biometric-login-btn" type="button">Connexion par biométrie</button>
+          <p class="error" id="login-error"></p>
+        </form>
+        <p class="switch-link login-register-link">Pas encore de compte ? <a href="#" id="show-register">Créer un compte</a></p>
+      </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register-page" class="page hidden">
+      <div class="login-container register-container">
+        <div class="app-icon">
+          <div class="login-logo">
+            <img id="register-logo-img" class="app-logo-img" alt="Logo">
+            <svg id="register-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="14" fill="oklch(0.55 0.18 30)"/>
+              <path d="M13 24l8 8 14-14" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <h1>Créer un compte</h1>
+        <p class="login-subtitle">Rejoignez Goodwater Recipes en quelques instants.</p>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-username">Nom d'utilisateur</label>
+            <input type="text" id="register-username" placeholder="Choisissez un nom" required pattern="[a-zA-Z0-9_-]+" maxlength="30" autocomplete="username">
+            <small>Lettres, chiffres, tiret et underscore uniquement</small>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Mot de passe</label>
+            <input type="password" id="register-password" placeholder="8 caractères minimum" required minlength="8" autocomplete="new-password">
+          </div>
+          <button type="submit" id="register-submit">S'inscrire</button>
+          <p class="error" id="register-error"></p>
+          <p class="success" id="register-success"></p>
+        </form>
+        <p class="switch-link login-register-link">Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-page" class="page hidden">
+
+      <!-- Fixed Top Banner -->
+      <div class="top-banner">
+        <div class="banner-left">
+          <div class="banner-logo-wrap">
+            <img id="banner-logo-img" class="app-logo-img banner-logo-clickable" alt="Goodwater Recipes" title="Recettes">
+          </div>
+          <span class="banner-app-name">Goodwater Recipes</span>
+        </div>
+        <div class="banner-center">
+          <button class="nav-btn active" type="button" data-nav="recipes">Recettes</button>
+          <button class="nav-btn" type="button" data-nav="shopping">Courses</button>
+          <button class="nav-btn user-only" type="button" data-nav="menu">Menu</button>
+          <button class="nav-btn user-only" type="button" data-nav="trash">Corbeille</button>
+          <button class="nav-btn admin-only" type="button" data-nav="admin">Admin</button>
+          <button class="nav-btn" type="button" data-nav="gym">Gym</button>
+        </div>
+        <div class="banner-right">
+          <button id="theme-toggle" class="theme-toggle" type="button" title="Basculer le thème" aria-label="Basculer le thème">
+            <span id="theme-icon">🌙</span>
+          </button>
+          <span id="header-username" class="user-name"></span>
+          <div class="app-launcher-wrap">
+            <button id="app-launcher-btn" class="app-grid-btn" type="button" aria-label="Ouvrir les applications et paramètres" title="Applications et paramètres" aria-expanded="false" aria-controls="app-launcher-menu">
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+            </button>
+            <div id="app-launcher-menu" class="app-launcher-menu hidden" role="menu">
+              <button type="button" class="app-launcher-item launcher-recipes" data-launcher-target="recipes" role="menuitem"><span class="app-launcher-icon">🍲</span><span>Recettes</span></button>
+              <button type="button" class="app-launcher-item launcher-shopping" data-launcher-target="shopping" role="menuitem"><span class="app-launcher-icon">🛒</span><span>Liste de courses</span></button>
+              <button type="button" class="app-launcher-item launcher-menu" data-launcher-target="menu" role="menuitem"><span class="app-launcher-icon">📅</span><span>Menu de la semaine</span></button>
+              <button type="button" class="app-launcher-item launcher-trash" data-launcher-target="trash" role="menuitem"><span class="app-launcher-icon">🗑️</span><span>Corbeille</span></button>
+              <button type="button" class="app-launcher-item launcher-gym" data-launcher-target="gym" role="menuitem"><span class="app-launcher-icon app-launcher-logo"><img src="/gym/logo.png?v=20260827-balanced" alt=""></span><span>Goodwater Gym</span></button>
+              <button type="button" class="app-launcher-item" data-launcher-target="profile" role="menuitem"><span class="app-launcher-icon">👤</span><span>Profil</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-area">
+
+        <!-- Recettes Tab -->
+        <div id="nav-recipes" class="nav-content active">
+          <section class="recipes-welcome" aria-labelledby="recipes-heading">
+            <div>
+              <p class="recipes-eyebrow">Votre bibliothèque culinaire</p>
+              <h2 id="recipes-heading">Qu’allons-nous cuisiner ?</h2>
+              <p id="recipes-greeting" class="recipes-welcome-copy">Retrouvez vos recettes et laissez-vous inspirer.</p>
+            </div>
+            <div class="recipes-overview" aria-label="Aperçu de la bibliothèque">
+              <div><strong id="recipes-total-count">0</strong><span>recettes</span></div>
+              <div><strong id="recipes-category-count">0</strong><span>catégories</span></div>
+            </div>
+          </section>
+          <div class="recipes-toolbar">
+            <label class="recipe-search-wrap" for="recipe-search">
+              <span aria-hidden="true">⌕</span>
+              <input type="search" id="recipe-search" placeholder="Rechercher un plat, un ingrédient…" autocomplete="off">
+              <kbd>Ctrl K</kbd>
+            </label>
+            <select id="recipe-sort" aria-label="Trier les recettes">
+              <option value="recent">Plus récentes</option>
+              <option value="alphabetical">A à Z</option>
+              <option value="category">Par catégorie</option>
+            </select>
+            <button id="random-recipe-btn" class="secondary-btn" type="button">Inspirez-moi</button>
+            <button id="add-recipe-btn" class="success-btn" type="button">+ Nouvelle recette</button>
+          </div>
+          <div id="recipe-category-filters" class="recipe-category-filters" aria-label="Filtrer par catégorie"></div>
+          <div class="recipes-results-heading">
+            <div><h3 id="recipes-results-title">Toutes les recettes</h3><p id="recipes-results-count"></p></div>
+            <button id="clear-recipe-filters" class="text-btn hidden" type="button">Effacer les filtres</button>
+          </div>
+          <div id="recipes-list" class="recipes-list">
+            <!-- Recipes will be rendered here by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="nav-shopping" class="nav-content hidden">
+          <div class="shopping-heading">
+            <div><h2>Liste de courses</h2><p>Ajoutez vos produits ou récupérez les ingrédients d’une recette.</p></div>
+          </div>
+          <p id="shopping-message" class="shopping-message" aria-live="polite"></p>
+          <div class="shopping-actions">
+            <form id="add-item-form">
+              <input id="shopping-item-name" type="text" maxlength="100" required placeholder="Ingrédient" aria-label="Ingrédient">
+              <input id="shopping-item-quantity" type="number" min="0.01" max="1000000" step="0.01" value="1" required aria-label="Quantité">
+              <input id="shopping-item-unit" type="text" maxlength="30" list="shopping-units" placeholder="Unité" aria-label="Unité">
+              <datalist id="shopping-units">
+                <option value="g"><option value="kg"><option value="ml"><option value="cl"><option value="l">
+                <option value="pièce"><option value="sachet"><option value="boîte"><option value="botte">
+              </datalist>
+              <button type="submit">Ajouter</button>
+            </form>
+            <button id="delete-checked-shopping-btn" type="button" class="danger-btn">Supprimer les éléments barrés</button>
+          </div>
+          <div class="shopping-list-card">
+            <ul id="shopping-list" aria-label="Liste de courses"></ul>
+          </div>
+        </div>
+
+        <!-- Menu de la semaine Tab -->
+        <div id="nav-menu" class="nav-content hidden">
+          <div class="menu-page-heading">
+            <div><h2>Menu de la semaine</h2><p>Glissez vos recettes dans les repas de la semaine.</p></div>
+            <div class="menu-heading-actions">
+              <button id="menu-add-shopping-btn" type="button" class="menu-add-btn">🛒 Ajouter tout aux courses</button>
+              <button id="menu-clear-btn" type="button" class="menu-clear-btn">Vider le menu</button>
+            </div>
+          </div>
+          <p id="menu-message" class="menu-message" aria-live="polite"></p>
+          <div class="menu-planner">
+            <aside class="menu-sidebar">
+              <h3 class="menu-sidebar-title">Mes recettes</h3>
+              <input id="menu-recipe-search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher une recette">
+              <p class="menu-touch-hint">Maintenez la poignée pour glisser, ou touchez une recette puis le repas choisi.</p>
+              <div id="menu-recipes-list" class="menu-recipes-list"></div>
+            </aside>
+            <div id="menu-days-container" class="menu-days-container"></div>
+          </div>
+        </div>
+
+        <div id="nav-trash" class="nav-content hidden">
+          <div class="admin-heading"><div><h2>Corbeille</h2><p>Restaurez une recette ou supprimez-la définitivement.</p></div><button id="trash-refresh-btn" class="secondary-btn" type="button">Actualiser</button></div>
+          <p id="trash-message" class="admin-message" aria-live="polite"></p>
+          <div id="recipe-trash-list" class="trash-list"></div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="nav-admin" class="nav-content hidden">
+          <div class="admin-heading">
+            <div><h2>Administration</h2><p>Gestion des utilisateurs et sécurité des connexions</p></div>
+            <button id="admin-refresh-btn" class="secondary-btn" type="button">Actualiser</button>
+          </div>
+          <p id="admin-message" class="admin-message" aria-live="polite"></p>
+          <div id="admin-stats" class="admin-stats" aria-label="Synthèse de l’administration"></div>
+          <section id="admin-stat-details" class="admin-stat-details hidden" aria-live="polite">
+            <div class="admin-stat-details-heading">
+              <h3 id="admin-stat-details-title"></h3>
+              <button id="admin-stat-details-close" type="button" class="secondary-btn" aria-label="Fermer le détail">Fermer</button>
+            </div>
+            <div id="admin-stat-details-list" class="admin-stat-details-list"></div>
+          </section>
+          <div class="admin-top-grid">
+            <section class="admin-panel">
+              <h3>Demandes d’inscription</h3>
+              <div id="admin-pending-list" class="admin-pending-list"></div>
+            </section>
+            <section class="admin-panel">
+              <h3>Créer un utilisateur</h3>
+              <form id="admin-create-user-form" class="admin-create-form">
+                <div class="form-group"><label for="admin-new-username">Nom utilisateur</label><input id="admin-new-username" required minlength="3" maxlength="30"></div>
+                <div class="form-group"><label for="admin-new-password">Mot de passe</label><input id="admin-new-password" type="password" required minlength="8" maxlength="128"></div>
+                <div class="form-group"><label for="admin-new-role">Rôle</label><select id="admin-new-role"><option value="viewer">Lecture</option><option value="editor">Lecture / écriture</option><option value="grand_chef">Grand chef</option></select></div>
+                <button type="submit" class="primary-btn">Créer l’utilisateur</button>
+              </form>
+            </section>
+          </div>
+          <section class="admin-panel">
+            <h3>Utilisateurs</h3>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-users-table">
+                <thead><tr><th>Utilisateur</th><th>Rôle</th><th>État</th><th>Blocage</th><th>Mot de passe</th><th>Actions</th></tr></thead>
+                <tbody id="admin-users-body"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="admin-panel">
+            <h3>Journal d’activité</h3>
+            <div class="admin-journal-switch" role="tablist" aria-label="Type de journal">
+              <button id="admin-logins-tab" class="admin-journal-tab active" type="button" role="tab" aria-selected="true" aria-controls="admin-logins-view">Tentatives de connexion</button>
+              <button id="admin-passwords-tab" class="admin-journal-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-passwords-view">Mots de passe</button>
+              <button id="admin-actions-tab" class="admin-journal-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-actions-view">Actions admin</button>
+            </div>
+            <div class="admin-log-filters">
+              <input id="admin-log-search" type="search" placeholder="Utilisateur, IP ou détail…" aria-label="Rechercher dans le journal">
+              <select id="admin-log-result" aria-label="Filtrer par résultat"><option value="all">Tous les résultats</option><option value="success">Succès</option><option value="failed">Échecs</option></select>
+              <input id="admin-log-from" type="date" aria-label="Date de début">
+              <input id="admin-log-to" type="date" aria-label="Date de fin">
+              <button id="admin-log-reset-btn" class="secondary-btn" type="button">Réinitialiser</button>
+              <button id="admin-log-export-btn" class="secondary-btn" type="button">Exporter CSV</button>
+            </div>
+            <div id="admin-logins-view" class="admin-journal-view" role="tabpanel" aria-labelledby="admin-logins-tab">
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-logs-table admin-login-logs-table">
+                  <thead><tr><th>Date et heure</th><th>Utilisateur</th><th>Adresse IP</th><th>Résultat</th><th>Détail</th></tr></thead>
+                  <tbody id="admin-login-logs-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="admin-passwords-view" class="admin-journal-view hidden" role="tabpanel" aria-labelledby="admin-passwords-tab">
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-logs-table admin-password-logs-table">
+                  <thead><tr><th>Date et heure</th><th>Effectué par</th><th>Compte concerné</th><th>Résultat</th><th>Détail</th></tr></thead>
+                  <tbody id="admin-password-logs-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="admin-actions-view" class="admin-journal-view hidden" role="tabpanel" aria-labelledby="admin-actions-tab">
+              <div class="admin-table-wrap"><table class="admin-table admin-logs-table admin-action-logs-table"><thead><tr><th>Date et heure</th><th>Effectué par</th><th>Cible</th><th>Résultat</th><th>Détail</th></tr></thead><tbody id="admin-action-logs-body"></tbody></table></div>
+            </div>
+            <div class="admin-load-more-wrap">
+              <button id="admin-load-more-btn" class="secondary-btn" type="button">Afficher 20 de plus</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Gym Tab -->
+        <div id="nav-gym" class="nav-content hidden">
+          <div class="gym-section">
+            <img class="gym-section-logo" src="/gym/logo.png?v=20260827-balanced" alt="Logo Goodwater Gym">
+            <div><h2>Goodwater Gym</h2><p>Suivi d'entraînement et statistiques</p></div>
+            <button id="goto-gym-btn" class="success-btn" type="button">Ouvrir Goodwater Gym</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recipe Modal -->
+      <div id="recipe-modal" class="modal hidden" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <button class="close-modal" type="button" aria-label="Fermer">&times;</button>
+          <div id="recipe-detail"></div>
+        </div>
+      </div>
+
+      <div id="cooking-mode-modal" class="modal cooking-mode-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cooking-recipe-title">
+        <div class="cooking-mode-content">
+          <button class="close-modal cooking-close" type="button" aria-label="Fermer le mode cuisson">&times;</button>
+          <header class="cooking-header">
+            <span class="cooking-eyebrow">MODE CUISSON</span>
+            <h2 id="cooking-recipe-title"></h2>
+            <div class="cooking-progress-meta"><span id="cooking-progress-label"></span></div>
+            <div class="cooking-progress-track"><div id="cooking-progress-bar" class="cooking-progress-bar"></div></div>
+          </header>
+          <section class="cooking-step-card">
+            <div id="cooking-step-number" class="cooking-step-number"></div>
+            <div id="cooking-step-text" class="cooking-step-text"></div>
+            <div id="cooking-ingredients-block" class="cooking-ingredients-block">
+              <h3>Ingrédients pour cette étape</h3>
+              <div id="cooking-step-ingredients" class="cooking-step-ingredients"></div>
+            </div>
+          </section>
+          <footer class="cooking-navigation">
+            <button id="cooking-prev-btn" type="button" class="secondary-btn">← Étape précédente</button>
+            <button id="cooking-next-btn" type="button" class="success-btn">Étape suivante →</button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Add/Edit Recipe Modal -->
+      <div id="recipe-form-modal" class="modal hidden" role="dialog" aria-hidden="true">
+        <div class="modal-content large-modal">
+          <button class="close-modal" type="button" aria-label="Fermer">&times;</button>
+          <h2 id="recipe-form-title">Nouvelle recette</h2>
+          <form id="recipe-form">
+            <div class="form-group">
+              <label for="recipe-form-title-input">Titre</label>
+              <input type="text" id="recipe-form-title-input" required>
+            </div>
+            <div class="form-group recipe-photo-field">
+              <label for="recipe-form-photo">Photo de la recette <span class="optional-label">(facultatif)</span></label>
+              <div class="recipe-photo-editor">
+                <div id="recipe-photo-preview" class="recipe-photo-preview"><span>Ajoutez une photo du plat</span></div>
+                <div class="recipe-photo-controls">
+                  <input id="recipe-form-photo" type="file" accept="image/jpeg,image/png,image/webp">
+                  <button id="illustrate-recipe-photo-btn" type="button" class="primary-btn hidden">
+                    <span class="recipe-ai-button-label">✨ Uniformiser avec l’IA</span>
+                    <span class="recipe-ai-spinner hidden" aria-hidden="true"></span>
+                  </button>
+                  <button id="remove-recipe-photo-btn" type="button" class="secondary-btn hidden">Supprimer la photo</button>
+                  <small id="recipe-photo-status">La photo sera recadrée automatiquement au format 4:3.</small>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="ingredient-builder-heading">
+                <label>Ingrédients</label>
+                <button id="add-recipe-ingredient-btn" type="button" class="secondary-btn">+ Ajouter un ingrédient</button>
+              </div>
+              <div id="recipe-ingredients-builder" class="recipe-ingredients-builder"></div>
+              <small>Indiquez au minimum le nom. La quantité et l’unité peuvent rester vides.</small>
+            </div>
+            <div class="form-group">
+              <div class="recipe-steps-heading">
+                <label>Étapes de préparation</label>
+              </div>
+              <div id="recipe-steps-builder" class="recipe-steps-builder"></div>
+              <button id="add-recipe-step-btn" type="button" class="secondary-btn recipe-add-step-btn">+ Ajouter une étape</button>
+              <small>Commencez à écrire le nom d’un ingrédient pour le compléter. Les durées comme « 10 minutes » sont détectées automatiquement.</small>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="recipe-form-category">Catégorie</label>
+                <input type="text" id="recipe-form-category" placeholder="Dessert">
+              </div>
+              <div class="form-group">
+                <label for="recipe-form-servings">Portions</label>
+                <input type="number" id="recipe-form-servings" min="1" value="1">
+              </div>
+            </div>
+            <fieldset class="nutrition-editor">
+              <legend>Estimation nutritionnelle <span>(par portion)</span></legend>
+              <div class="nutrition-grid">
+                <label>Calories<input id="nutrition-calories" type="number" min="0" step="0.1" inputmode="decimal" placeholder="kcal"></label>
+                <label>Protéines<input id="nutrition-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label>
+                <label>Glucides<input id="nutrition-carbs" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label>
+                <label>Lipides<input id="nutrition-fat" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label>
+                <label>Fibres<input id="nutrition-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label>
+              </div>
+              <button id="estimate-nutrition-btn" class="secondary-btn" type="button">Estimer depuis les ingrédients</button>
+              <p id="nutrition-estimate-message" class="nutrition-estimate-message" role="status" aria-live="polite"></p>
+              <small>Choisissez une fiche CIQUAL pour chaque ingrédient et indiquez son poids en g ou kg. Les quantités en volume ou à la pièce ne sont pas converties automatiquement.</small>
+              <small>Valeurs indicatives d’après la table Ciqual 2025 de l’Anses ; elles ne remplacent pas un calcul nutritionnel professionnel.</small>
+            </fieldset>
+            <div class="modal-actions">
+              <button type="submit" class="success-btn">Enregistrer</button>
+              <button type="button" class="secondary-btn">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- User Profile Modal -->
+      <div id="settings-modal" class="modal hidden" role="dialog" aria-hidden="true">
+        <div class="modal-content modal-content-sm">
+          <button class="close-modal" id="close-settings-modal" type="button" aria-label="Fermer">&times;</button>
+          <div class="settings-content">
+            <div class="settings-header">
+              <div class="settings-avatar" id="settings-avatar">?</div>
+              <div>
+                <h2>Mon profil</h2>
+                <p id="profile-role" class="profile-role"></p>
+              </div>
+            </div>
+            <form id="profile-form" class="settings-section">
+              <h3>Informations personnelles</h3>
+              <div class="form-group">
+                <label for="settings-username-display">Nom d'utilisateur</label>
+                <input type="text" id="settings-username-display" readonly>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-first-name">Prénom</label>
+                  <input type="text" id="profile-first-name" maxlength="60" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                  <label for="profile-last-name">Nom</label>
+                  <input type="text" id="profile-last-name" maxlength="60" autocomplete="family-name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profile-description">Description</label>
+                <textarea id="profile-description" maxlength="500" rows="4" placeholder="Quelques mots sur vous…"></textarea>
+              </div>
+              <p id="profile-message" class="success" aria-live="polite"></p>
+              <button type="submit" class="primary-btn">Enregistrer le profil</button>
+            </form>
+            <form id="profile-password-form" class="settings-section">
+              <h3>Changer mon mot de passe</h3>
+              <div class="form-group">
+                <label for="profile-current-password">Mot de passe actuel</label>
+                <div class="password-field">
+                  <input type="password" id="profile-current-password" required maxlength="128" autocomplete="current-password">
+                  <button type="button" class="password-toggle" data-password-toggle="profile-current-password" aria-label="Afficher le mot de passe actuel" aria-pressed="false"><span aria-hidden="true">Afficher</span></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profile-new-password">Nouveau mot de passe</label>
+                <div class="password-field">
+                  <input type="password" id="profile-new-password" required minlength="8" maxlength="128" autocomplete="new-password">
+                  <button type="button" class="password-toggle" data-password-toggle="profile-new-password" aria-label="Afficher le nouveau mot de passe" aria-pressed="false"><span aria-hidden="true">Afficher</span></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profile-confirm-password">Confirmer le nouveau mot de passe</label>
+                <div class="password-field">
+                  <input type="password" id="profile-confirm-password" required minlength="8" maxlength="128" autocomplete="new-password">
+                  <button type="button" class="password-toggle" data-password-toggle="profile-confirm-password" aria-label="Afficher la confirmation du mot de passe" aria-pressed="false"><span aria-hidden="true">Afficher</span></button>
+                </div>
+              </div>
+              <p id="profile-password-message" aria-live="polite"></p>
+              <button type="submit" class="primary-btn">Modifier le mot de passe</button>
+            </form>
+            <section class="settings-section biometric-settings-section">
+              <div class="settings-section-heading">
+                <div><h3>Connexion par biométrie</h3><p>Accédez à tous vos services Goodwater sans saisir votre mot de passe.</p></div>
+              </div>
+              <button id="register-biometric-btn" class="secondary-btn biometric-register-btn" type="button">Activer sur cet appareil</button>
+              <div id="biometric-list" class="biometric-list" aria-live="polite"></div>
+            </section>
+            <section class="settings-section">
+              <div class="settings-section-heading"><div><h3>Appareils connectés</h3><p>Déconnectez les sessions que vous ne reconnaissez pas.</p></div><button id="sessions-refresh-btn" class="secondary-btn" type="button">Actualiser</button></div>
+              <p id="sessions-message" aria-live="polite"></p>
+              <div id="sessions-list" class="sessions-list"></div>
+            </section>
+            <div class="settings-section">
+              <button id="logout-btn-modal" class="danger-btn" type="button">Déconnexion</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Modal -->
+      <div id="help-modal" class="modal hidden" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+          <button class="close-modal" id="close-help-modal" type="button" aria-label="Fermer">&times;</button>
+          <div class="help-content">
+            <h2>Mode d'emploi</h2>
+            
+            <div class="help-section">
+              <h3>📋 Présentation</h3>
+              <p>Goodwater Recipes vous permet de créer et gérer vos recettes avec la syntaxe Cooklang.</p>
+            </div>
+            
+            <div class="help-section">
+              <h3>🏷️ Syntaxe Cooklang</h3>
+              <ul>
+                <li><strong>Ingrédients</strong> : @lait{50ml}</li>
+                <li><strong>Temps</strong> : ~{10%min}</li>
+                <li><strong>Portions</strong> : &gt;&gt; servings: 4 &lt;&lt;</li>
+              </ul>
+            </div>
+            
+            <div class="help-section">
+              <h3>📖 Exemple</h3>
+              <pre>
+&lt;&lt;servings: 2&gt;&gt;
+@pomme{3}
+@sucre{50g}
+
+1. Mélanger @pomme{3} avec @sucre{50g}.
+2. Cuire pendant ~{15%min}.</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/vendor/simplewebauthn-browser.js?v=13.3.0"></script>
+  <script src="/data/nutrition.js?v=ciqual-2025"></script>
+  <script src="/script.js?v=ciqual-estimator-2025-gym-link"></script>
+</body>
+</html>

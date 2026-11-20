@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goodwater Task</title>
+  <link rel="stylesheet" href="style.css?v=20260827-goodwater-confirm">
+  <link rel="icon" type="image/png" href="/logo.png">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Login -->
+    <div id="login-page" class="page">
+      <div class="login-container">
+        <div class="app-icon">
+          <div class="login-logo" id="login-logo-wrap">
+            <img id="login-logo-img" class="app-logo-img" alt="Logo">
+            <svg id="login-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="14" fill="var(--primary)"/>
+              <path d="M13 24l8 8 14-14" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <h1>Goodwater Task</h1>
+        <p class="login-subtitle">Organisez vos journées, simplement.</p>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Nom d'utilisateur</label>
+            <input type="text" id="login-username" placeholder="Entrez votre nom d'utilisateur" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Mot de passe</label>
+            <input type="password" id="login-password" placeholder="Entrez votre mot de passe" required autocomplete="current-password">
+          </div>
+          <button type="submit">Se connecter</button>
+          <div class="login-divider"><span>ou</span></div>
+          <button id="passkey-login-btn" class="passkey-login-btn" type="button">Connexion par biométrie</button>
+          <p class="error hidden" id="login-error"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-page" class="page hidden">
+
+      <!-- Top Banner -->
+      <div class="top-banner">
+        <div class="banner-left">
+          <div class="banner-logo-wrap" id="logo-upload-area">
+            <img id="banner-logo-img" class="app-logo-img" alt="Logo">
+            <svg id="banner-logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="9" fill="var(--primary)"/>
+              <path d="M8 16l5.5 5.5 10.5-10.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="logo-change-overlay hidden" id="logo-upload-overlay" title="Changer le logo">📷</div>
+          </div>
+          <span class="app-name">Goodwater Task</span>
+        </div>
+        <div class="banner-right">
+          <button id="theme-toggle" class="icon-btn" title="Changer le thème">🌙</button>
+          <span class="user-name" id="current-user"></span>
+          <button id="settings-btn" class="settings-grid-btn" type="button" title="Paramètres du profil" aria-label="Ouvrir les paramètres du profil">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="content-area">
+
+        <section class="workspace-hero" aria-labelledby="workspace-title">
+          <div class="workspace-heading">
+            <span class="eyebrow">Votre espace de travail</span>
+            <h1 id="workspace-title">Bonjour, <span id="workspace-user">vous</span></h1>
+            <p>Gardez une vue claire sur ce qui compte aujourd’hui.</p>
+          </div>
+          <button id="add-task-btn" class="primary-btn hero-add-btn">
+            <span aria-hidden="true">＋</span> Nouvelle tâche
+          </button>
+        </section>
+
+        <section class="task-overview" aria-label="Résumé des tâches">
+          <button type="button" class="overview-card overview-total active" data-filter="all" aria-pressed="true">
+            <span class="overview-icon" aria-hidden="true">✓</span>
+            <div><strong id="stat-total">0</strong><span>Tâches au total</span></div>
+          </button>
+          <button type="button" class="overview-card overview-active" data-filter="active" aria-pressed="false">
+            <span class="overview-icon" aria-hidden="true">○</span>
+            <div><strong id="stat-active">0</strong><span>En cours</span></div>
+          </button>
+          <button type="button" class="overview-card overview-done" data-filter="done" aria-pressed="false">
+            <span class="overview-icon" aria-hidden="true">↗</span>
+            <div><strong id="stat-done">0</strong><span>Terminées</span></div>
+          </button>
+        </section>
+
+        <!-- Toolbar -->
+        <div class="tasks-toolbar">
+          <div class="toolbar-label">
+            <h2>Mes tâches</h2>
+            <span id="visible-task-count">0 tâche</span>
+          </div>
+          <label class="search-field" for="task-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input type="search" id="task-search" placeholder="Rechercher..." autocomplete="off">
+          </label>
+          <select id="project-filter" aria-label="Filtrer par projet">
+            <option value="">Tous les projets</option>
+          </select>
+        </div>
+
+        <!-- New Task Form -->
+        <div id="new-task-form" class="task-form-card hidden">
+          <h3>Nouvelle tâche</h3>
+          <input type="text" id="new-task-title" placeholder="Titre de la tâche" required>
+          <textarea id="new-task-desc" placeholder="Description (optionnel)..." rows="3"></textarea>
+          <div class="task-options-grid">
+            <div class="form-group">
+              <label for="new-task-due">Échéance</label>
+              <input type="datetime-local" id="new-task-due">
+            </div>
+            <div class="form-group">
+              <label for="new-task-priority">Priorité</label>
+              <select id="new-task-priority"><option value="low">Basse</option><option value="normal" selected>Normale</option><option value="high">Haute</option></select>
+            </div>
+            <div class="form-group">
+              <label for="new-task-recurrence">Récurrence</label>
+              <select id="new-task-recurrence"><option value="none">Aucune</option><option value="daily">Chaque jour</option><option value="weekly">Chaque semaine</option><option value="monthly">Chaque mois</option></select>
+            </div>
+            <div class="form-group">
+              <label for="new-task-project">Projet</label>
+              <input type="text" id="new-task-project" maxlength="60" placeholder="Ex. Personnel">
+            </div>
+            <div class="form-group">
+              <label for="new-task-tags">Étiquettes</label>
+              <input type="text" id="new-task-tags" placeholder="urgent, maison">
+            </div>
+            <div class="form-group">
+              <label for="new-task-assignee">Attribuer à</label>
+              <select id="new-task-assignee"><option value="">Moi-même</option></select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button id="save-task-btn" class="primary-btn">Ajouter</button>
+            <button id="cancel-task-btn" class="ghost-btn">Annuler</button>
+          </div>
+        </div>
+
+        <!-- Tasks List -->
+        <div id="tasks-list"></div>
+
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-hidden="true" aria-labelledby="settings-title">
+      <div class="modal-content modal-content-sm">
+        <button class="close-modal" id="close-settings-modal" type="button" aria-label="Fermer">&times;</button>
+        <div class="settings-content">
+          <div class="settings-header">
+            <div class="settings-avatar" id="settings-avatar">?</div>
+            <div>
+              <h2 id="settings-title">Mon profil</h2>
+              <p id="settings-role-display" class="profile-role"></p>
+            </div>
+          </div>
+
+          <form id="profile-form" class="settings-section">
+            <h3>Informations personnelles</h3>
+            <div class="form-group">
+              <label for="settings-username-display">Nom d'utilisateur</label>
+              <input type="text" id="settings-username-display" readonly>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="profile-first-name">Prénom</label>
+                <input type="text" id="profile-first-name" maxlength="60" autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label for="profile-last-name">Nom</label>
+                <input type="text" id="profile-last-name" maxlength="60" autocomplete="family-name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="profile-description">Description</label>
+              <textarea id="profile-description" maxlength="500" rows="4" placeholder="Quelques mots sur vous…"></textarea>
+            </div>
+            <p id="profile-message" class="form-message" aria-live="polite"></p>
+            <button type="submit" class="primary-btn">Enregistrer le profil</button>
+          </form>
+
+          <form id="change-password-form" class="settings-section">
+            <h3>Changer mon mot de passe</h3>
+            <div class="form-group">
+              <label for="current-password">Mot de passe actuel</label>
+              <div class="password-field">
+                <input type="password" id="current-password" required maxlength="128" autocomplete="current-password">
+                <button type="button" class="password-toggle" data-password-toggle="current-password" aria-label="Afficher le mot de passe actuel" aria-pressed="false">Afficher</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-password-profile">Nouveau mot de passe</label>
+              <div class="password-field">
+                <input type="password" id="new-password-profile" required minlength="8" maxlength="128" autocomplete="new-password">
+                <button type="button" class="password-toggle" data-password-toggle="new-password-profile" aria-label="Afficher le nouveau mot de passe" aria-pressed="false">Afficher</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirmer le nouveau mot de passe</label>
+              <div class="password-field">
+                <input type="password" id="confirm-password" required minlength="8" maxlength="128" autocomplete="new-password">
+                <button type="button" class="password-toggle" data-password-toggle="confirm-password" aria-label="Afficher la confirmation" aria-pressed="false">Afficher</button>
+              </div>
+            </div>
+            <p class="error hidden" id="password-change-error"></p>
+            <div id="password-change-success" class="hidden"><p class="pw-success-text">Mot de passe modifié sur tous les services.</p></div>
+            <button type="submit" class="primary-btn">Modifier le mot de passe</button>
+          </form>
+
+          <section class="settings-section app-settings-section">
+            <h3>Sécurité</h3>
+            <p>Activez la connexion par biométrie pour accéder plus rapidement à votre compte sans saisir votre mot de passe.</p>
+            <div class="app-settings-actions">
+              <button id="register-passkey-btn" class="ghost-btn" type="button">Activer la connexion par biométrie</button>
+            </div>
+            <div id="biometric-list" class="biometric-list" aria-live="polite"></div>
+          </section>
+
+          <div class="settings-section settings-logout-section">
+            <button id="logout-btn" class="danger-btn" type="button">Déconnexion</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/gif,image/webp" class="hidden">
+  <script src="/vendor/simplewebauthn-browser.js?v=13.2.2"></script>
+  <script src="script.js?v=20260827-goodwater-confirm"></script>
+</body>
+</html>

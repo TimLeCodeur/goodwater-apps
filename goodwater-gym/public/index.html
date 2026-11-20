@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Goodwater Gym</title>
+  <link rel="stylesheet" href="style.css?v=20261112-app-switcher">
+  <link rel="icon" type="image/png" href="logo.png?v=20260827-balanced">
+  <link rel="apple-touch-icon" href="logo.png?v=20260827-balanced">
+</head>
+<body>
+  <div id="app">
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+      <div class="login-container">
+        <div class="app-icon" aria-hidden="true">
+          <div class="login-logo"><img src="logo.png?v=20260827-balanced" alt=""></div>
+        </div>
+        <h1>Goodwater Gym</h1>
+        <p class="login-subtitle">Progressez et suivez vos séances, simplement.</p>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Nom d'utilisateur</label>
+            <input type="text" id="login-username" placeholder="Entrez votre nom d'utilisateur" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Mot de passe</label>
+            <div class="password-field"><input type="password" id="login-password" placeholder="Entrez votre mot de passe" required autocomplete="current-password"><button type="button" class="password-toggle" data-password-toggle="login-password" aria-label="Afficher le mot de passe" aria-pressed="false">Afficher</button></div>
+          </div>
+          <button type="submit" id="login-submit">Se connecter</button>
+          <div class="login-divider"><span>ou</span></div><button id="passkey-login-btn" class="passkey-login-btn" type="button">Connexion par biométrie</button>
+          <p class="error" id="login-error"></p>
+        </form>
+        <p class="switch-link login-register-link">Pas encore de compte ? <a href="#" id="show-register">Créer un compte</a></p>
+      </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register-page" class="page hidden">
+      <div class="login-container">
+        <div class="app-icon" aria-hidden="true">
+          <div class="login-logo"><img src="logo.png?v=20260827-balanced" alt=""></div>
+        </div>
+        <h1>Créer un compte</h1>
+        <p class="login-subtitle">Rejoignez Goodwater Gym en quelques instants.</p>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-username">Nom d'utilisateur</label>
+            <input type="text" id="register-username" placeholder="Choisissez un nom d'utilisateur" required pattern="[a-zA-Z0-9_-]+" maxlength="30" autocomplete="username">
+            <small>Lettres, chiffres, - et _ uniquement</small>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Mot de passe</label>
+            <input type="password" id="register-password" placeholder="8 caractères minimum" required minlength="8" autocomplete="new-password">
+          </div>
+          <button type="submit" id="register-submit">S'inscrire</button>
+          <p class="error" id="register-error"></p>
+          <p class="success" id="register-success"></p>
+        </form>
+        <p class="switch-link login-register-link">Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-page" class="page hidden">
+      <header class="top-banner goodwater-banner">
+        <div class="banner-left">
+          <div class="banner-logo-wrap banner-logo" aria-hidden="true"><img src="logo.png?v=20260827-balanced" alt=""></div>
+          <span class="app-name banner-app-name">Goodwater Gym</span>
+        </div>
+        <div class="banner-right">
+          <button id="theme-btn" class="icon-btn" type="button" aria-label="Changer le thème">☾</button>
+          <span class="user-name" id="current-user"></span>
+          <button id="settings-btn" class="settings-grid-btn" type="button" aria-label="Ouvrir les paramètres"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="3" cy="3" r="1.8"/><circle cx="9" cy="3" r="1.8"/><circle cx="15" cy="3" r="1.8"/><circle cx="3" cy="9" r="1.8"/><circle cx="9" cy="9" r="1.8"/><circle cx="15" cy="9" r="1.8"/><circle cx="3" cy="15" r="1.8"/><circle cx="9" cy="15" r="1.8"/><circle cx="15" cy="15" r="1.8"/></svg></button>
+        </div>
+      </header>
+
+      <!-- Tab Bar -->
+      <nav class="tab-bar" aria-label="Navigation principale">
+        <button class="tab-btn active" data-nav="dashboard" type="button">
+          <span class="tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
+          <span class="tab-label">Aperçu</span>
+        </button>
+        <button class="tab-btn" data-nav="workout" type="button">
+          <span class="tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5 15 12l-5 3.5z"/></svg></span>
+          <span class="tab-label">Séance</span>
+        </button>
+        <button class="tab-btn" data-nav="programs" type="button">
+          <span class="tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 3v3M16 3v3M8 10h8M8 14h5M8 18h7"/></svg></span>
+          <span class="tab-label">Mes séances</span>
+        </button>
+        <button class="tab-btn" data-nav="exercises" type="button">
+          <span class="tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9v6M3.5 10.5v3M18 9v6M20.5 10.5v3M6 12h12"/></svg></span>
+          <span class="tab-label">Exercices</span>
+        </button>
+        <button class="tab-btn" data-nav="records" type="button">
+          <span class="tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h8v4a4 4 0 0 1-8 0zM12 12v5M8 21h8M9 17h6M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4"/></svg></span>
+          <span class="tab-label">Records</span>
+        </button>
+      </nav>
+
+      <!-- Dashboard -->
+      <div id="dashboard" class="content">
+        <section class="workspace-hero"><div><span class="eyebrow">Aujourd’hui</span><h1>Bonjour, <span id="workspace-user">vous</span></h1><p>Une séance claire, une progression visible. Que voulez-vous faire ?</p><div id="easter-egg-badges" class="easter-egg-badges" aria-label="Badges secrets débloqués"></div></div><button class="btn-primary hero-action" type="button" data-go-workout>Commencer une séance <span>→</span></button></section>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-value" id="stat-workouts">0</span>
+            <span class="stat-label">Séances réalisées</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-duration">0</span>
+            <span class="stat-label">Minutes d’effort</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-records">0</span>
+            <span class="stat-label">Records personnels</span>
+          </div>
+        </div>
+        <section class="calendar-card"><div class="calendar-header"><div><span class="eyebrow">Régularité</span><h2 id="calendar-month">Calendrier</h2><small class="calendar-wheel-hint">Molette : avancer ou reculer d’une semaine</small></div><div><button id="calendar-prev" type="button" aria-label="Période précédente">←</button><button id="calendar-next" type="button" aria-label="Période suivante">→</button></div></div><div class="calendar-view-switch" role="group" aria-label="Période du calendrier"><button type="button" data-calendar-view="week">Semaine</button><button type="button" class="active" data-calendar-view="month">Mois</button><button type="button" data-calendar-view="year">Année</button></div><div class="calendar-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div><div class="calendar-viewport"><div id="workout-calendar" class="workout-calendar"></div></div><div class="calendar-legend"><span><i class="calendar-dot rest"></i>Pas de séance</span><span><i class="calendar-dot done"></i>Séance réalisée</span></div></section>
+        <div class="section-heading"><div><span class="eyebrow">Activité</span><h2>Séances récentes</h2></div><button class="text-btn" type="button" data-go-history>Tout voir</button></div>
+        <div id="recent-workouts" class="list"></div>
+      </div>
+
+      <!-- Workout -->
+      <div id="workout" class="content hidden">
+        <!-- Start Workout Section -->
+        <div id="start-workout-section">
+          <div class="start-workout-icon">＋</div><h2>Prêt à commencer ?</h2><p>Donnez un nom à votre entraînement pour le retrouver facilement.</p>
+          <div class="form-group">
+            <label for="workout-name">Nom de la séance</label>
+            <input type="text" id="workout-name" placeholder="Ex. Haut du corps" maxlength="100" autocomplete="off">
+          </div>
+          <button id="start-workout-btn" class="btn-primary">Démarrer une séance</button>
+        </div>
+
+        <!-- Active Workout Section -->
+        <div id="active-workout-section" class="hidden">
+          <div class="workout-header">
+            <div class="workout-stats">
+              <div class="workout-stat">
+                <span class="workout-stat-value" id="workout-timer">00:00</span>
+                <span class="workout-stat-label">Durée de la séance</span>
+              </div>
+              <div class="workout-stat">
+                <span class="workout-stat-value" id="workout-total-kg">0</span>
+                <span class="workout-stat-label">KG</span>
+              </div>
+              <div class="workout-stat">
+                <span class="workout-stat-value" id="workout-total-sets">0</span>
+                <span class="workout-stat-label">Séries</span>
+              </div>
+            </div>
+            <div class="workout-actions">
+              <button id="finish-workout-btn" class="btn-primary">Terminer</button>
+              <button id="abandon-workout-btn" class="btn-danger">Abandonner</button>
+            </div>
+          </div>
+          
+          <div id="active-workout-exercises"></div>
+          <button id="add-exercise-btn" class="btn-secondary">+ Ajouter un exercice</button>
+          
+          <div class="timer-section" id="rest-timer">
+            <div class="timer-heading"><div><span class="eyebrow">Récupération</span><h3>Minuteur de repos</h3></div><span class="timer-status" id="timer-status">Prêt</span></div>
+            <div class="timer-ring" id="timer-ring" style="--timer-progress:0%;--timer-handle-x:50%;--timer-handle-y:2.5%"><div class="timer-ring-inner"><div class="timer-display" id="timer-display">00:00</div><small>restant</small></div><button id="timer-dial-handle" class="timer-dial-handle" type="button" role="slider" aria-label="Choisir la durée du minuteur" aria-valuemin="0" aria-valuemax="600" aria-valuenow="0" aria-valuetext="0 seconde"></button></div>
+            <p class="timer-help">Choisissez une durée pour lancer votre récupération.</p>
+            <div class="timer-controls">
+              <button class="timer-btn" type="button" data-time="60">1 min</button>
+              <button class="timer-btn" type="button" data-time="90">1 min 30</button>
+              <button class="timer-btn" type="button" data-time="120">2 min</button>
+              <button class="timer-btn" type="button" data-time="180">3 min</button>
+              <button id="stop-timer-btn" type="button">Réinitialiser</button>
+            </div>
+            <form id="custom-timer-form" class="custom-timer-form"><label for="custom-timer-minutes">Temps personnalisé</label><div><input id="custom-timer-minutes" type="text" inputmode="decimal" placeholder="Ex. 4.5" autocomplete="off"><span>min</span><button type="submit">Lancer</button></div></form>
+          </div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div id="programs" class="content hidden">
+        <div class="page-heading page-heading-row"><div><span class="eyebrow">Planifier</span><h1>Mes séances</h1><p>Préparez vos exercices une fois, lancez votre entraînement quand vous voulez.</p></div><button id="create-template-btn" class="btn-primary compact-btn" type="button">＋ Créer une séance</button></div>
+        <div id="template-list" class="template-grid"></div>
+      </div>
+
+      <!-- History -->
+      <div id="history" class="content hidden">
+        <div class="page-heading"><span class="eyebrow">Votre régularité</span><h1>Historique</h1><p>Revenez sur chacune de vos séances.</p></div>
+        <div id="history-list" class="list"></div>
+      </div>
+
+      <!-- Exercises -->
+      <div id="exercises" class="content hidden">
+        <div class="page-heading page-heading-row"><div><span class="eyebrow">Bibliothèque complète</span><h1>Choisir un exercice</h1><p><span id="exercise-count">1 324</span> mouvements classés par zone musculaire, avec démonstration.</p></div><button id="add-custom-exercise-btn" class="btn-primary compact-btn">＋ Exercice perso</button></div>
+        <div id="muscle-chips" class="muscle-chips" aria-label="Groupes musculaires"></div>
+        <div id="exercise-selection-bar" class="exercise-selection-bar hidden"><div><strong id="exercise-selection-count">0 exercice sélectionné</strong><button id="clear-exercise-selection" type="button">Tout retirer</button></div><button id="add-selection-to-template" class="btn-primary compact-btn" type="button">Ajouter à une séance</button></div>
+        <div class="filters">
+          <label class="search-field"><span>⌕</span><input type="search" id="exercise-search" placeholder="Rechercher un exercice..." autocomplete="off"></label>
+          <select id="muscle-filter">
+            <option value="">Tous les groupes musculaires</option>
+          </select>
+        </div>
+        <div id="exercise-list" class="grid"></div>
+      </div>
+
+      <!-- Records -->
+      <div id="records" class="content hidden">
+        <div class="page-heading"><span class="eyebrow">Vos meilleures performances</span><h1>Records personnels</h1><p>Mesurez concrètement votre progression.</p></div>
+        <div class="filters record-filters"><label class="search-field"><span>⌕</span><input type="search" id="record-search" placeholder="Rechercher un exercice…" autocomplete="off"></label><select id="record-muscle-filter"><option value="">Toutes les catégories</option></select></div>
+        <p id="record-results-summary" class="results-summary"></p>
+        <div id="records-list" class="list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settings-title">
+    <div class="modal-content modal-content-sm settings-panel">
+      <button class="close-modal" id="close-settings-btn" type="button" aria-label="Fermer">&times;</button>
+      <div class="settings-content">
+      <div class="settings-header">
+        <div class="settings-avatar" id="settings-avatar">?</div>
+        <div><h2 id="settings-title">Mon profil</h2><p id="settings-role" class="profile-role">Utilisateur</p></div>
+      </div>
+      <form id="profile-form" class="settings-section">
+        <h3>Informations personnelles</h3>
+        <div class="form-group"><label for="settings-username">Nom d'utilisateur</label><input type="text" id="settings-username" readonly></div>
+        <div class="form-row"><div class="form-group"><label for="profile-first-name">Prénom</label><input type="text" id="profile-first-name" maxlength="60" autocomplete="given-name"></div><div class="form-group"><label for="profile-last-name">Nom</label><input type="text" id="profile-last-name" maxlength="60" autocomplete="family-name"></div></div>
+        <div class="form-group"><label for="profile-description">Description</label><textarea id="profile-description" maxlength="500" rows="4" placeholder="Quelques mots sur vous…"></textarea></div>
+        <p id="profile-message" class="form-message" aria-live="polite"></p><button type="submit" class="btn-primary">Enregistrer le profil</button>
+      </form>
+      <form id="change-password-form" class="settings-section">
+        <h3>Changer mon mot de passe</h3>
+        <div class="form-group"><label for="current-password">Mot de passe actuel</label><div class="password-field"><input type="password" id="current-password" required maxlength="128" autocomplete="current-password"><button type="button" class="password-toggle" data-password-toggle="current-password">Afficher</button></div></div>
+        <div class="form-group"><label for="new-password-profile">Nouveau mot de passe</label><div class="password-field"><input type="password" id="new-password-profile" required minlength="8" maxlength="128" autocomplete="new-password"><button type="button" class="password-toggle" data-password-toggle="new-password-profile">Afficher</button></div></div>
+        <div class="form-group"><label for="confirm-password">Confirmer le nouveau mot de passe</label><div class="password-field"><input type="password" id="confirm-password" required minlength="8" maxlength="128" autocomplete="new-password"><button type="button" class="password-toggle" data-password-toggle="confirm-password">Afficher</button></div></div>
+        <p id="password-change-message" class="form-message" aria-live="polite"></p><button type="submit" class="btn-primary">Modifier le mot de passe</button>
+      </form>
+      <section class="settings-section biometric-settings-section"><h3>Sécurité</h3><p class="settings-help">Utilisez votre empreinte, votre visage ou le verrouillage de votre appareil pour vous connecter.</p><button id="register-passkey-btn" class="btn-secondary biometric-register-btn" type="button">Activer la connexion par biométrie</button><div id="biometric-list" class="biometric-list" aria-live="polite"></div></section>
+      <section class="settings-section">
+        <h3>Applications</h3>
+        <a class="btn-secondary settings-app-link" href="https://goodwater-recipes.fr/">Ouvrir Goodwater Recipes <span aria-hidden="true">→</span></a>
+      </section>
+      <section class="settings-section"><h3>Session</h3><button id="logout-btn" class="logout-action" type="button">Se déconnecter</button></section>
+      </div>
+    </div>
+  </div>
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Exercise Modal -->
+  <div id="exercise-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Sélectionner un exercice</h3>
+      <input type="text" id="modal-exercise-search" placeholder="Rechercher...">
+      <div id="modal-exercise-list" class="list"></div>
+      <button id="close-modal-btn" class="btn-secondary">Fermer</button>
+    </div>
+  </div>
+
+  <!-- Custom Exercise Modal -->
+  <div id="custom-exercise-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Nouvel exercice</h3>
+      <form id="custom-exercise-form">
+        <div class="form-group">
+          <label for="custom-exercise-name">Nom</label>
+          <input type="text" id="custom-exercise-name" required>
+        </div>
+        <div class="form-group">
+          <label for="custom-exercise-muscle">Groupe musculaire</label>
+          <select id="custom-exercise-muscle" required>
+            <option value="">Sélectionner</option>
+            <option value="Pectoraux">Pectoraux</option>
+            <option value="Dos">Dos</option>
+            <option value="Quadriceps">Quadriceps</option>
+            <option value="Ischio-jambiers">Ischio-jambiers</option>
+            <option value="Fessiers">Fessiers</option>
+            <option value="Épaules">Épaules</option>
+            <option value="Biceps">Biceps</option>
+            <option value="Triceps">Triceps</option>
+            <option value="Abdominaux">Abdominaux</option>
+            <option value="Avant-bras">Avant-bras</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="custom-exercise-equipment">Équipement</label>
+          <input type="text" id="custom-exercise-equipment" placeholder="Optionnel">
+        </div>
+        <button type="submit" class="btn-primary">Créer</button>
+        <button type="button" id="close-custom-modal-btn" class="btn-secondary">Annuler</button>
+      </form>
+    </div>
+  </div>
+
+<!-- Workout Detail Modal -->
+  <div id="workout-detail-modal" class="modal hidden">
+    <div class="modal-content workout-detail-panel">
+      <div class="modal-header">
+        <h3 id="detail-workout-name">Séance</h3>
+        <button id="close-detail-modal-btn" class="btn-close">✕</button>
+      </div>
+      <div class="detail-stats">
+        <div class="detail-stat">
+          <span class="detail-stat-value" id="detail-duration">0</span>
+          <span class="detail-stat-label">min</span>
+        </div>
+        <div class="detail-stat">
+          <span class="detail-stat-value" id="detail-kg">0</span>
+          <span class="detail-stat-label">KG</span>
+        </div>
+        <div class="detail-stat">
+          <span class="detail-stat-value" id="detail-sets">0</span>
+          <span class="detail-stat-label">Séries</span>
+        </div>
+      </div>
+      <div id="detail-exercises" class="detail-exercises"></div>
+      <div class="workout-detail-actions"><button id="reuse-workout-btn" class="btn-primary" type="button">↻ Refaire cette séance</button></div>
+    </div>
+  </div>
+
+  <div id="exercise-detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="exercise-detail-name">
+    <div class="modal-content exercise-detail-panel">
+      <button id="close-exercise-detail-btn" class="btn-close" type="button" aria-label="Fermer">✕</button>
+      <div id="exercise-detail-content"></div>
+    </div>
+  </div>
+
+  <div id="template-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="template-modal-title">
+    <div class="modal-content template-modal-panel">
+      <button id="close-template-modal" class="close-modal" type="button" aria-label="Fermer">&times;</button>
+      <span class="eyebrow">Nouvelle séance</span><h2 id="template-modal-title">Choisissez vos exercices</h2>
+      <div class="form-group"><label for="template-name">Nom de la séance</label><input id="template-name" type="text" maxlength="100" placeholder="Ex. Haut du corps" autocomplete="off"></div>
+      <label class="search-field template-search"><span>⌕</span><input id="template-exercise-search" type="search" placeholder="Rechercher un exercice ou un muscle…" autocomplete="off"></label>
+      <div class="template-selection-summary"><strong id="template-selection-count">0 exercice sélectionné</strong><button id="clear-template-selection" type="button">Tout retirer</button></div>
+      <div id="template-exercise-list" class="template-exercise-list"></div>
+      <button id="save-template-btn" class="btn-primary" type="button">Enregistrer la séance</button>
+    </div>
+  </div>
+
+  <div id="assign-template-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="assign-template-title">
+    <div class="modal-content assign-template-panel">
+      <button id="close-assign-template" class="close-modal" type="button" aria-label="Fermer">&times;</button>
+      <span class="eyebrow">Exercices sélectionnés</span><h2 id="assign-template-title">Ajouter à une séance</h2>
+      <div id="assign-template-list" class="assign-template-list"></div>
+      <div class="assign-new-template"><span>ou créer une nouvelle séance</span><div><input id="assign-new-template-name" type="text" maxlength="100" placeholder="Nom de la nouvelle séance"><button id="create-template-from-selection" class="btn-primary compact-btn" type="button">Créer</button></div></div>
+    </div>
+  </div>
+
+  <div id="template-detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="template-detail-title">
+    <div class="modal-content template-detail-panel"><button id="close-template-detail" class="close-modal" type="button" aria-label="Fermer">&times;</button><div id="template-detail-content"></div></div>
+  </div>
+
+  <div id="delete-workout-modal" class="modal hidden" role="alertdialog" aria-modal="true" aria-labelledby="delete-workout-title" aria-describedby="delete-workout-message">
+    <div class="modal-content delete-confirm-panel">
+      <div class="delete-confirm-icon" aria-hidden="true">×</div>
+      <h2 id="delete-workout-title">Supprimer cette séance ?</h2>
+      <p id="delete-workout-message">Cette action est définitive. Les exercices et les performances enregistrés pendant cette séance seront supprimés.</p>
+      <div class="delete-confirm-actions">
+        <button id="cancel-delete-workout" class="btn-secondary" type="button">Annuler</button>
+        <button id="confirm-delete-workout" class="btn-danger" type="button">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="record-progress-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="record-progress-title">
+    <div class="modal-content record-progress-panel">
+      <button id="close-record-progress" class="btn-close" type="button" aria-label="Fermer">✕</button>
+      <span class="eyebrow">Progression dans le temps</span><h2 id="record-progress-title">Progression</h2>
+      <div id="record-progress-summary" class="record-progress-summary"></div>
+      <div id="record-progress-chart" class="record-progress-chart"></div>
+    </div>
+  </div>
+
+  <div id="image-viewer-modal" class="modal image-viewer-modal hidden" role="dialog" aria-modal="true" aria-label="Aperçu de l’exercice">
+    <button id="close-image-viewer" class="image-viewer-close" type="button" aria-label="Fermer">&times;</button><div class="image-viewer-content"><img id="image-viewer-img" alt=""><p id="image-viewer-caption"></p></div>
+  </div>
+
+  <script src="/vendor/simplewebauthn-browser.js?v=13.3.0"></script>
+  <script src="script.js?v=20260827-light-easter-eggs"></script>
+</body>
+</html>
